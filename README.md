@@ -1,2 +1,0 @@
-# cuentas
-Created with CodeSandbox
