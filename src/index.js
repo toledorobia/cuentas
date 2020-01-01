@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import ReactDOM from "react-dom";
 import { Router } from "@reach/router";
 import { AuthProvider, AuthContext } from "./components/Auth";
+import { StoreProvider } from "./components/Store";
 
 import PrivateRoute from "./components/PrivateRoute";
 import LoadingPage from "./pages/LoadingPage";
@@ -18,8 +19,6 @@ import "./styles.css";
 const App = () => {
   const { auth } = useContext(AuthContext);
 
-  console.log("App");
-
   if (!auth.loaded) {
     return <LoadingPage />;
   }
@@ -29,13 +28,17 @@ const App = () => {
       <Nav />
       <main role="main" className="container-fluid">
         <Router>
-          <NotFoundPage default />
-          <PrivateRoute path="/">
-            <HomePage path="/" />
-            <SettingsPage path="/settings" />
-          </PrivateRoute>
           <LoginPage path="/login" />
         </Router>
+        <StoreProvider>
+          <Router>
+            <NotFoundPage default />
+            <PrivateRoute path="/">
+              <HomePage path="/" />
+              <SettingsPage path="/settings" />
+            </PrivateRoute>
+          </Router>
+        </StoreProvider>
       </main>
     </>
   );

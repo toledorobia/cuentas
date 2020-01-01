@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import app from "../firebase";
 
 export const AuthContext = React.createContext({
-  currentUser: null,
-  loaded: false
+  auth: null,
+  logout: null
 });
 
 export const AuthProvider = props => {
   const [auth, setAuth] = useState({
+    uid: null,
     user: null,
     logged: false,
     loaded: false
@@ -20,8 +21,9 @@ export const AuthProvider = props => {
   };
 
   useEffect(() => {
-    let subs = app.auth().onAuthStateChanged(user => {
+    let unsubscribe = app.auth().onAuthStateChanged(user => {
       setAuth({
+        uid: user != null ? user.uid : null,
         user: user,
         logged: user != null,
         loaded: true
@@ -29,7 +31,7 @@ export const AuthProvider = props => {
     });
 
     return () => {
-      subs();
+      unsubscribe();
     };
   }, []);
 
