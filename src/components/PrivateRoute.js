@@ -2,10 +2,10 @@ import React, { useContext } from "react";
 import { Redirect } from "@reach/router";
 import { AuthContext } from "./Auth";
 
-const PrivateRoute = (props) => {
-  const { logged } = useContext(AuthContext);
+const PrivateRoute = props => {
+  const { auth } = useContext(AuthContext);
 
-  if (logged == null) {
+  if (auth.logged === false) {
     return <Redirect noThrow to="login" />;
   }
 

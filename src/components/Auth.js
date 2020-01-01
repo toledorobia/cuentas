@@ -7,24 +7,34 @@ export const AuthContext = React.createContext({
 });
 
 export const AuthProvider = props => {
-  const [user, setUser] = useState(null);
-  const [logged, setLogged] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const [auth, setAuth] = useState({
+    user: null,
+    logged: false,
+    loaded: false
+  });
+  // const [logged, setLogged] = useState(false);
+  // const [loaded, setLoaded] = useState(false);
+
+  const logout = () => {
+    app.auth().signOut();
+  };
 
   useEffect(() => {
     let subs = app.auth().onAuthStateChanged(user => {
-      setLogged(true);
-      setUser(user);
-      setLoaded(true);
+      setAuth({
+        user: user,
+        logged: user != null,
+        loaded: true
+      });
     });
 
     return () => {
       subs();
-    }
+    };
   }, []);
 
   return (
-    <AuthContext.Provider value={{ logged, user, loaded }}>
+    <AuthContext.Provider value={{ auth, logout }}>
       {props.children}
     </AuthContext.Provider>
   );
